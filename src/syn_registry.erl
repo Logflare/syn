@@ -667,9 +667,9 @@ resolve_conflict(Scope, Name, {Pid, Meta, Time}, {TablePid, TableMeta, TableTime
     case PidToKeep of
         Pid ->
             %% -> we keep the remote pid
-            error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> keeping remote: ~p",
-                [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, Pid]
-            ),
+            %% error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> keeping remote: ~p",
+            %%     [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, Pid]
+            %% ),
             %% update locally, the incoming sync_register will update with the time coming from remote node
             update_local_table(Name, TablePid, {Pid, Meta, Time, undefined}, TableByName, TableByPid),
             %% kill
@@ -683,9 +683,9 @@ resolve_conflict(Scope, Name, {Pid, Meta, Time}, {TablePid, TableMeta, TableTime
 
         TablePid ->
             %% -> we keep the local pid, remote pid will be killed by the other node in the conflict
-            error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> keeping local: ~p",
-                [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, TablePid]
-            ),
+            %% error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> keeping local: ~p",
+            %%     [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, TablePid]
+            %% ),
             %% overwrite with updated time
             ResolveTime = erlang:system_time(),
             add_to_local_table(Name, TablePid, TableMeta, ResolveTime, TableMRef, TableByName, TableByPid),
@@ -693,9 +693,9 @@ resolve_conflict(Scope, Name, {Pid, Meta, Time}, {TablePid, TableMeta, TableTime
             syn_gen_scope:broadcast({'3.0', sync_register, Name, TablePid, TableMeta, ResolveTime, syn_conflict_resolution}, State);
 
         Invalid ->
-            error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> none chosen (got: ~p)",
-                [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, Invalid]
-            ),
+            %% error_logger:info_msg("SYN[~s|~s<~s>] Registry CONFLICT for name ~p: ~p vs ~p -> none chosen (got: ~p)",
+            %%     [node(), ?MODULE_LOG_NAME, Scope, Name, {Pid, Meta}, {TablePid, TableMeta}, Invalid]
+            %% ),
             %% remove
             maybe_demonitor(TablePid, TableByPid),
             remove_from_local_table(Name, TablePid, TableByName, TableByPid),
